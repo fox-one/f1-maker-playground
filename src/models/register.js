@@ -1,12 +1,10 @@
 import {
   register,
-  requestImageCaptcha,
-  activateMerchant,
-  reActivateMerchant,
+  getCaptcha,
+  requestRegisterSMS,
 } from '@/services/merchant';
 import { reloadAuthorized } from '@/utils/Authorized';
-import { setFoxToken, setAuthority } from '@/utils/authority';
-import md5 from 'blueimp-md5';
+import { setSession, setAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'register',
@@ -21,12 +19,12 @@ export default {
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const { name, captchaId, mail, password, captcha } = payload;
+      const { name, captchaId, mobile, password, captcha } = payload;
 
       const response = yield call(register, {
         name,
-        email: mail,
-        password: md5(password),
+        mobile,
+        password,
         captchaId,
         captcha,
       });
@@ -41,52 +39,17 @@ export default {
       }
     },
 
+    *requestRegister({payload},{call,put}){
+      const response = yield call(requestRegisterSMS, payload)
+      
+    },
+
     *getImageCaptcha(payload, { call, put }) {
-      const captcha = yield call(requestImageCaptcha);
+      const captcha = yield call(getCaptcha);
       yield put({
         type: 'updateCaptcha',
         payload: captcha,
       });
-    },
-
-    *activate({ payload }, { call, put }) {
-      const { email, code } = payload;
-      const validationCode = code;
-      const validationType = 0;
-
-      const response = yield call(activateMerchant, {
-        email,
-        validationCode,
-        validationType,
-      });
-
-      if (response != null) {
-        const { token } = response;
-        if (token) {
-          setFoxToken(token);
-          setAuthority('admin');
-          yield put({
-            type: 'activateHandle',
-            payload: true,
-          });
-        }
-      }
-    },
-
-    *reactivate({ payload }, { call, put }) {
-      const response = yield call(reActivateMerchant, payload);
-
-      if (response != null) {
-        const { token } = response;
-        if (token) {
-          setFoxToken(token);
-          setAuthority('admin');
-          yield put({
-            type: 'activateHandle',
-            payload: true,
-          });
-        }
-      }
     },
   },
 
@@ -102,7 +65,7 @@ export default {
     updateCaptcha(state, { payload }) {
       return {
         ...state,
-        captchaUrl: payload.captchaUrl,
+        captchaUrl: payload.captchaURL,
         captchaId: payload.captchaId,
       };
     },

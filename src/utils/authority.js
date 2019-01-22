@@ -23,28 +23,28 @@ export function setAuthority(authority) {
   return localStorage.setItem(constants.storage.authority, JSON.stringify(proAuthority));
 }
 
-const foxBrokerId = 'fox-brokerId';
+const merchantId = 'merchantId';
 // 存储 Fox.One Token
-export function setToken(token) {
-  return localforage.setItem(constants.storage.token, token);
+export function setSession(session) {
+  return localforage.setItem(constants.storage.session, session);
 }
 
-export function removeFoxToken() {
-  return localforage.removeItem(constants.storage.token);
+export function removeSession() {
+  return localforage.removeItem(constants.storage.session);
 }
 
-export async function getToken() {
-  return localforage.getItem(constants.storage.token);
+export async function getSession() {
+  return localforage.getItem(constants.storage.session);
 }
 
 export function setMerchantBrokerId(brokerId) {
-  return localforage.setItem(foxBrokerId, brokerId);
+  return localforage.setItem(merchantId, brokerId);
 }
 
 export async function getMerchantBrokerId() {
-  return localforage.getItem(foxBrokerId);
+  return localforage.getItem(merchantId);
 }
 
 export function removeMerchantBrokerId() {
-  return localforage.removeItem(foxBrokerId);
+  return localforage.removeItem(merchantId);
 }

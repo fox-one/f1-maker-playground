@@ -4,7 +4,9 @@ import { notification } from 'antd';
 import hash from 'hash.js';
 import { getLocale } from 'umi/locale';
 import router from 'umi/router';
-import { getToken } from './authority';
+import { URL } from 'url';
+import { generateSignRequest, generateToken } from 'f1-passport';
+import { getSession } from './authority';
 
 const codeMessageCN = {
   10700: '此手机号码已经注册',
@@ -76,6 +78,29 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
+const regexSt = new RegExp('^https://[a-zA-Z0-9.-]*/');
+
+async function signAndRequest(session, url, options) {
+  let host = url.match(regexSt)[0]
+  host = host.substring(0,host.length-1)
+
+  const pathAndQuery = url.replace(regexSt, '/');
+  const signData = generateSignRequest(options.method.toLowerCase(), pathAndQuery);
+  const token = await generateToken(session.key, session.secret, signData.sign);
+  const finalUrl = `${host}${signData.uri}`;
+
+  const headers = {
+    ...options.headers,
+    Authorization: `Bearer ${token}`
+  }
+  const newOptions = {
+    ...options,
+    method: options.method.toLowerCase(),
+    headers
+  }
+  return fetch(finalUrl, newOptions);
+}
+
 /**
  * Requests a URL, returning a promise.
  *
@@ -101,20 +126,13 @@ export default async function request(url, option) {
 
   const defaultOptions = {
     credentials: 'include',
-    headers: {
-      'f1ex-admin-token': await getToken(),
-    },
   };
+  
   const newOptions = { ...defaultOptions, ...options };
 
   newOptions.headers = {
     ...newOptions.headers,
   };
-  // add token
-  const token = await getToken();
-  if (token) {
-    newOptions.headers['f1ex-admin-token'] = token;
-  }
 
   if (newOptions.method === 'POST' || newOptions.method === 'PUT' || newOptions.method === 'DELETE') {
     if (!(newOptions.body instanceof FormData)) {
@@ -156,7 +174,16 @@ export default async function request(url, option) {
     }
   }
 
-  return fetch(urlCopy, newOptions)
+  let fetchRequest = null;
+  // add token
+  const session = await getSession();
+  if (session) {
+    fetchRequest = signAndRequest(session, urlCopy, newOptions);
+  } else {
+    fetchRequest = fetch(urlCopy, newOptions);
+  }
+
+  return fetchRequest
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
@@ -169,7 +196,7 @@ export default async function request(url, option) {
     })
     .catch(e => {
       const status = e.name;
-
+      console.log(e)
       if (status === 'TypeError') {
         const error = new Error('服务不可用');
         error.name = '服务不可用，服务器暂时过载或维护。';

@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { accountLogin, changePassword, updateAccount } from '@/services/merchant';
-import { setToken, setAuthority, removeFoxToken, removeMerchantBrokerId } from '@/utils/authority';
+import { accountLogin, changePassword, updateAccount, getAccountInfo } from '@/services/merchant';
+import { setSession, setAuthority, removeSession, removeMerchantBrokerId } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 // import router from 'umi/router';
@@ -16,20 +16,22 @@ export default {
   state: {
     status: undefined,
     email: '',
+    mobile:'',
+    user: null
   },
 
   effects: {
     *login({ payload }, { call, put }) {
-      const { password: rawPassword, email } = payload;
-      const password = md5(`f1ex_admin_${rawPassword}`);
+      const { password: rawPassword, mobile } = payload;
+      
+      if (mobile){
+        yield put({
+          type:'updateMobile',
+          payload: mobile
+        })
+      }
 
-      yield put({
-        type: 'updateEmail',
-        payload: email,
-      });
-
-      const response = yield call(accountLogin, { password, email });
-
+      const response = yield call(accountLogin, { password:rawPassword, mobile });
       if (!response) {
         yield put({
           type: 'changeLoginStatus',
@@ -46,9 +48,9 @@ export default {
         payload: { ...response, currentAuthority },
       });
 
-      const { token } = response;
-      if (token != null) {
-        setToken(token);
+      const { session } = response;
+      if (session != null) {
+        setSession(session);
         reloadAuthorized();
 
         const urlParams = new URL(window.location.href);
@@ -78,47 +80,15 @@ export default {
       }
     },
 
-    *updateAccount(payload, { call, put }) {
-      const { param } = payload;
-      const success = yield call(updateAccount, param);
-      if (success) {
-        notification.success({
-          message: formatMessage({ id: `app.settings.notification.update-name.success` }),
-        });
-
-        window.g_app._store.dispatch({
-          type: 'merchant/fetchCurrent',
-        });
-
-        yield put({
-          type: 'updateSuccessHandler',
-        });
-      }
+    *getAccount(_, { call, put }) {
+      const response = yield call(getAccountInfo,null);    
+      yield put({
+        type:'updateUserInfo',
+        payload:response
+      })
     },
 
-    *changePassword(payload, { call, put }) {
-      const {
-        payload: { oldpassword, password: newRawPassword, confirm },
-      } = payload;
-      if (confirm !== newRawPassword) {
-        return;
-      }
-      const success = yield call(changePassword, {
-        password: md5(oldpassword),
-        newPassword: md5(newRawPassword),
-      });
-      if (success) {
-        yield put({
-          type: 'changePasswordHandler',
-        });
-
-        notification.success({
-          message: formatMessage({ id: `app.settings.notification.update-password.success` }),
-        });
-      }
-    },
-
-    *logout(val, { put }) {
+    *logout(_, { put }) {
       yield put({
         type: 'changeLoginStatus',
         payload: {
@@ -126,10 +96,8 @@ export default {
         },
       });
 
-      // yield call(logoutAccount);
-
       setAuthority('guest');
-      removeFoxToken();
+      removeSession();
       removeMerchantBrokerId();
       reloadAuthorized();
       removeAdminUUID();
@@ -146,6 +114,12 @@ export default {
   },
 
   reducers: {
+    updateUserInfo(state,{payload}){
+      return {
+        ...state,
+        user: payload.user
+      }
+    },
     changeLoginStatus(state, { payload }) {
       if (payload.currentAuthority) {
         setAuthority(payload.currentAuthority);
@@ -156,10 +130,10 @@ export default {
         type: payload.type,
       };
     },
-    updateEmail(state, { payload }) {
+    updateMobile(state, { payload }) {
       return {
         ...state,
-        email: payload,
+        mobile: payload,
       };
     },
     updateSuccessHandler(state) {

@@ -1,5 +1,5 @@
 import { queryCurrent, updateMerchant } from '@/services/merchant';
-import { getToken } from '@/utils/authority';
+import { getSession } from '@/utils/authority';
 import router from 'umi/router';
 import { notification } from 'antd';
 import { formatMessage } from 'umi/locale';
@@ -13,7 +13,7 @@ export default {
 
   effects: {
     *fetchCurrent(_, { call, put }) {
-      const token = yield getToken();
+      const token = yield getSession();
       if (!token) {
         // eslint-disable-next-line no-underscore-dangle
         window.g_app._store.dispatch({
@@ -37,29 +37,29 @@ export default {
       }
     },
 
-    *updateMerchantInfo({ payload }, { call, put }) {
-      const success = yield call(updateMerchant, payload);
-      if (success) {
-        notification.success({
-          message: formatMessage({ id: `app.settings.notification.update-merchant.success` }),
-        });
-        const response = yield call(queryCurrent);
+  //   *updateMerchantInfo({ payload }, { call, put }) {
+  //     const success = yield call(updateMerchant, payload);
+  //     if (success) {
+  //       notification.success({
+  //         message: formatMessage({ id: `app.settings.notification.update-merchant.success` }),
+  //       });
+  //       const response = yield call(queryCurrent);
 
-        yield put({
-          type: 'saveCurrentUser',
-          merchant: response,
-        });
-      }
-    },
+  //       yield put({
+  //         type: 'saveCurrentUser',
+  //         merchant: response,
+  //       });
+  //     }
+  //   },
   },
 
   reducers: {
-    saveCurrentUser(state, action) {
-      return {
-        ...state,
-        currentUser: action.merchant,
-      };
-    },
+    // saveCurrentUser(state, action) {
+    //   return {
+    //     ...state,
+    //     currentUser: action.merchant,
+    //   };
+    // },
     completedHandler(state, action) {
       return {
         ...state,

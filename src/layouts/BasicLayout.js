@@ -130,12 +130,12 @@ class BasicLayout extends React.PureComponent {
 
   getBasicInfo() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'pairs/getPairList',
-    });
-    dispatch({
-      type: 'assets/getAssets',
-    });
+    // dispatch({
+    //   type: 'pairs/getPairList',
+    // });
+    // dispatch({
+    //   type: 'assets/getAssets',
+    // });
   }
 
   getContext() {

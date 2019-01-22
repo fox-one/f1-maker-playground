@@ -1,76 +1,36 @@
 import request from '@/utils/request';
+import { Passport } from 'f1-passport';
 import constants from '../constants';
-import { getToken, getMerchantBrokerId } from '@/utils/authority';
+import { getSession, getMerchantBrokerId } from '@/utils/authority';
 
-export async function logoutAccount() {
-  const token = await getToken();
-  const auth = `Bearer ${token}`;
-  const headers = {
-    Authorization: auth,
-  };
+const passport = new Passport({ ApiHost: constants.passportHost, merchantId: '5c8a9491dca25af694004d5e1711b217' })
 
-  return request(`${constants.hosts}/api/v1/merchants/logout`, {
-    method: 'DELETE',
-    headers,
-  });
-}
-
-export async function updateMerchant(params) {
-  const token = await getToken();
-  const brokerId = await getMerchantBrokerId();
-  const auth = `Bearer ${token}`;
-  const headers = {
-    Authorization: auth,
-  };
-
-  return request(`${constants.hosts}/api/v1/merchants/info/${brokerId}`, {
-    method: 'PUT',
-    body: params,
-    headers,
-  });
-}
-
-export async function updateAccount(params) {
-  const token = await getToken();
-  const auth = `Bearer ${token}`;
-  const headers = {
-    Authorization: auth,
-  };
-  return request(`${constants.hosts}/api/v1/merchants/account`, {
-    method: 'PUT',
-    body: params,
-    headers,
-  });
-}
-
-export async function changePassword(params) {
-  const token = await getToken();
-  const auth = `Bearer ${token}`;
-  const headers = {
-    Authorization: auth,
-  };
-  return request(`${constants.hosts}/api/v1/merchants/password`, {
-    method: 'PUT',
-    body: params,
-    headers,
-  });
+export async function getAccountInfo() {
+  return request('https://dev-cloud.fox.one/api/account/detail', {
+    method: 'GET',
+  })
 }
 
 export async function accountLogin(params) {
-  const url = `${constants.hosts}/admin/login`;
-
-  return request(url, {
-    method: 'POST',
-    body: params,
-  });
+  return passport.login('86', params.mobile, params.password)
 }
 
-export async function queryCurrent() {
-  const token = await getToken();
-  const auth = `Bearer ${token}`;
-  const header = {
-    Authorization: auth,
-  };
+export async function requestRegisterSMS(regionCode, mobile, captchaId, captchaCode){
+  return passport.requestRegisterSMS(regionCode, mobile, captchaId, captchaCode)
+}
 
-  return request(`${constants.hosts}/api/v1/merchants`, { headers: header });
+export async function requestLoginSMS(regionCode, mobile, captchaId, captchaCode){
+  return passport.requestLoginSMS(regionCode, mobile, captchaId, captchaCode)
+}
+
+export async function getCaptcha(){
+  return passport.getCaptcha()
+}
+
+export async function register(name, mobileCode, password, token){
+  return passport.register(name,mobileCode,password,token)
+}
+
+export async function captchaLogin(token,mobileCode){
+  return passport.mobileLogin(token,mobileCode)
 }
