@@ -81,8 +81,8 @@ const cachedSave = (response, hashcode) => {
 const regexSt = new RegExp('^https://[a-zA-Z0-9.-]*/');
 
 async function signAndRequest(session, url, options) {
-  let host = url.match(regexSt)[0]
-  host = host.substring(0,host.length-1)
+  let host = url.match(regexSt)[0];
+  host = host.substring(0, host.length - 1);
 
   const pathAndQuery = url.replace(regexSt, '/');
   const signData = generateSignRequest(options.method.toLowerCase(), pathAndQuery);
@@ -91,14 +91,58 @@ async function signAndRequest(session, url, options) {
 
   const headers = {
     ...options.headers,
-    Authorization: `Bearer ${token}`
-  }
+    Authorization: `Bearer ${token}`,
+  };
   const newOptions = {
     ...options,
     method: options.method.toLowerCase(),
-    headers
-  }
+    headers,
+  };
   return fetch(finalUrl, newOptions);
+}
+
+export function handleRequestError(e) {
+  const status = e.name;
+  console.log(e);
+  if (status === 'TypeError') {
+    const error = new Error('服务不可用');
+    error.name = '服务不可用，服务器暂时过载或维护。';
+    notification.error({
+      message: error.message,
+      description: error.name,
+    });
+    throw error;
+  }
+
+  if (status <= 504 && status >= 500) {
+    router.push('/exception/500');
+    return;
+  }
+
+  if (status === 404) {
+    router.push('/exception/404');
+  }
+
+  if (status === 401) {
+    // @HACK
+    /* eslint-disable no-underscore-dangle */
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
+  }
+
+  // e.response.then(response => {
+  //   const locale = getLocale();
+  //   let message = response.error;
+  //   if (!locale || locale === 'zh-CN') {
+  //     message = codeMessageCN[response.status] ? codeMessageCN[response.status] : response.error;
+  //   } else {
+  //     message = codeMessageUS[response.status] ? codeMessageUS[response.status] : response.error;
+  //   }
+  //   notification.error({
+  //     message,
+  //   });
+  // });
 }
 
 /**
@@ -108,7 +152,6 @@ async function signAndRequest(session, url, options) {
  * @param  {object} [option] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-
 export default async function request(url, option) {
   const options = {
     expirys: false,
@@ -127,7 +170,7 @@ export default async function request(url, option) {
   const defaultOptions = {
     credentials: 'include',
   };
-  
+
   const newOptions = { ...defaultOptions, ...options };
 
   newOptions.headers = {
@@ -195,46 +238,6 @@ export default async function request(url, option) {
       return response.json();
     })
     .catch(e => {
-      const status = e.name;
-      console.log(e)
-      if (status === 'TypeError') {
-        const error = new Error('服务不可用');
-        error.name = '服务不可用，服务器暂时过载或维护。';
-        notification.error({
-          message: error.message,
-          description: error.name,
-        });
-        throw error;
-      }
-
-      if (status <= 504 && status >= 500) {
-        router.push('/exception/500');
-        return;
-      }
-
-      if (status === 404) {
-        router.push('/exception/404');
-      }
-
-      if (status === 401) {
-        // @HACK
-        /* eslint-disable no-underscore-dangle */
-        window.g_app._store.dispatch({
-          type: 'login/logout',
-        });
-      }
-
-      // e.response.then(response => {
-      //   const locale = getLocale();
-      //   let message = response.error;
-      //   if (!locale || locale === 'zh-CN') {
-      //     message = codeMessageCN[response.status] ? codeMessageCN[response.status] : response.error;
-      //   } else {
-      //     message = codeMessageUS[response.status] ? codeMessageUS[response.status] : response.error;
-      //   }
-      //   notification.error({
-      //     message,
-      //   });
-      // });
+      handleRequestError(e);
     });
 }

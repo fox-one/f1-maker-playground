@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
-import Login from '@/components/Login';
 import router from 'umi/router';
-import { Form, Input, Button, Row, Col, Popover, Progress, Icon, Select } from 'antd';
+import { Form, Input, Button, Row, Col, Progress, Icon, Select } from 'antd';
 import styles from './Register.less';
-
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
 const FormItem = Form.Item;
 
@@ -46,30 +43,36 @@ class Register extends Component {
     confirmDirty: false,
     visible: false,
     help: '',
+    regionCode: '86',
   };
 
   componentWillMount() {
     this.onGetImageCaptcha();
   }
 
-  componentDidUpdate() {
-    const { form, register } = this.props;
-    const account = form.getFieldValue('mail');
-    // if (register.status === 'ok') {
-    //   router.push({
-    //     pathname: '/merchant/register-result',
-    //     state: {
-    //       account,
-    //     },
-    //   });
-    // }
+  componentWillReceiveProps(props) {
+    const {
+      register: { token },
+    } = props;
+    if (token) {
+      router.push({
+        pathname: '/admin/registerconfirm',
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'register/resetState',
+    });
   }
 
   onGetImageCaptcha = () => {
     const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'register/getImageCaptcha',
-    // });
+    dispatch({
+      type: 'register/getImageCaptcha',
+    });
   };
 
   getPasswordStatus = () => {
@@ -84,26 +87,30 @@ class Register extends Component {
     return 'poor';
   };
 
+  changePrefix = value => {
+    this.setState({
+      regionCode: value,
+    });
+  };
+
   handleSubmit = e => {
     const { form, dispatch } = this.props;
     const { register } = this.props;
+    const { regionCode } = this.state;
     const { captchaId } = register;
-
-    router.push({
-      pathname: '/admin/registerconfirm',
-    });
-    e.preventDefault();
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         dispatch({
-          type: 'register/submit',
+          type: 'register/requestRegister',
           payload: {
             ...values,
+            regionCode,
             captchaId,
           },
         });
       }
     });
+    e.preventDefault();
   };
 
   handleConfirmBlur = e => {
@@ -169,7 +176,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { help, visible } = this.state;
+    const { help, visible, regionCode } = this.state;
 
     const {
       register: { captchaUrl },
@@ -188,8 +195,9 @@ class Register extends Component {
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             <Input.Group compact>
-              <Select size='large' value='86' onChange={this.changePrefix} style={{ width: '25%' }}>
+              <Select size='large' value={regionCode} onChange={this.changePrefix} style={{ width: '25%' }}>
                 <Select.Option value='86'>+86</Select.Option>
+                <Select.Option value='1'>+1</Select.Option>
               </Select>
               {getFieldDecorator('mobile', {
                 rules: [
@@ -209,7 +217,7 @@ class Register extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator('captcha', {
+                {getFieldDecorator('captchaCode', {
                   rules: [
                     {
                       required: true,

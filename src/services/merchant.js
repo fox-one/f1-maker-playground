@@ -1,36 +1,64 @@
-import request from '@/utils/request';
+import request, { handleRequestError } from '@/utils/request';
 import { Passport } from 'f1-passport';
 import constants from '../constants';
-import { getSession, getMerchantBrokerId } from '@/utils/authority';
+import { getSession } from '@/utils/authority';
 
-const passport = new Passport({ ApiHost: constants.passportHost, merchantId: '5c8a9491dca25af694004d5e1711b217' })
+const passport = new Passport({ host: constants.passportHost, merchantId: '5c8a9491dca25af694004d5e1711b217' });
 
 export async function getAccountInfo() {
-  return request('https://dev-cloud.fox.one/api/account/detail', {
-    method: 'GET',
-  })
+  const session = await getSession();
+  return passport.getUserDetail(session).catch(e => {
+    handleRequestError(e);
+  });
 }
 
+/**
+ * @param {regionCode,mobile,password} params
+ */
 export async function accountLogin(params) {
-  return passport.login('86', params.mobile, params.password)
+  return passport.login(params).catch(e => {
+    handleRequestError(e);
+  });
 }
 
-export async function requestRegisterSMS(regionCode, mobile, captchaId, captchaCode){
-  return passport.requestRegisterSMS(regionCode, mobile, captchaId, captchaCode)
+/**
+ * @param {regionCode, mobile, captchaId, captchaCode} params
+ */
+export async function requestRegisterSMS(params) {
+  return passport.requestRegisterSMS(params).catch(e => {
+    handleRequestError(e);
+  });
 }
 
-export async function requestLoginSMS(regionCode, mobile, captchaId, captchaCode){
-  return passport.requestLoginSMS(regionCode, mobile, captchaId, captchaCode)
+/**
+ * @param {regionCode, mobile, captchaId, captchaCode} params
+ */
+export async function requestLoginSMS(params) {
+  return passport.requestLoginSMS(params).catch(e => {
+    handleRequestError(e);
+  });
 }
 
-export async function getCaptcha(){
-  return passport.getCaptcha()
+export async function getCaptcha() {
+  return passport.getCaptcha().catch(e => {
+    handleRequestError(e);
+  });
 }
 
-export async function register(name, mobileCode, password, token){
-  return passport.register(name,mobileCode,password,token)
+/**
+ * @param {name, code, password, token} params
+ */
+export async function register(params) {
+  return passport.register(params).catch(e => {
+    handleRequestError(e);
+  });
 }
 
-export async function captchaLogin(token,mobileCode){
-  return passport.mobileLogin(token,mobileCode)
+/**
+ * @param {token,mobileCode} params
+ */
+export async function captchaLogin(params) {
+  return passport.mobileLogin(params).catch(e => {
+    handleRequestError(e);
+  });
 }

@@ -1,8 +1,4 @@
-import {
-  register,
-  getCaptcha,
-  requestRegisterSMS,
-} from '@/services/merchant';
+import { register, getCaptcha, requestRegisterSMS } from '@/services/merchant';
 import { reloadAuthorized } from '@/utils/Authorized';
 import { setSession, setAuthority } from '@/utils/authority';
 
@@ -15,12 +11,12 @@ export default {
     captchaId: '',
     email: '',
     activity: false,
+    token: null,
   },
 
   effects: {
     *submit({ payload }, { call, put }) {
       const { name, captchaId, mobile, password, captcha } = payload;
-
       const response = yield call(register, {
         name,
         mobile,
@@ -34,26 +30,43 @@ export default {
         const status = 'ok';
         yield put({
           type: 'registerHandle',
-          payload: { ...response, status, email: mail },
+          payload: { ...response, status, mobile },
         });
       }
     },
 
-    *requestRegister({payload},{call,put}){
-      const response = yield call(requestRegisterSMS, payload)
-      
+    *requestRegister({ payload }, { call, put }) {
+      const response = yield call(requestRegisterSMS, payload);
+      yield put({
+        type: 'requestRegisterSMS',
+        payload: response,
+      });
     },
 
-    *getImageCaptcha(payload, { call, put }) {
+    *getImageCaptcha(_, { call, put }) {
       const captcha = yield call(getCaptcha);
       yield put({
         type: 'updateCaptcha',
         payload: captcha,
       });
     },
+
+    *resetState(_, { put }) {
+      yield put({
+        type: 'clearState',
+      });
+    },
   },
 
   reducers: {
+    requestRegisterSMS(state, { payload }) {
+      console.log(payload.token);
+      return {
+        ...state,
+        token: payload.token,
+      };
+    },
+
     registerHandle(state, { payload }) {
       reloadAuthorized();
       return {
@@ -62,6 +75,7 @@ export default {
         email: payload.email,
       };
     },
+
     updateCaptcha(state, { payload }) {
       return {
         ...state,
@@ -69,10 +83,10 @@ export default {
         captchaId: payload.captchaId,
       };
     },
-    activateHandle(state, { payload }) {
+    clearState(state, _) {
       return {
         ...state,
-        activity: payload,
+        requestSMS: false,
       };
     },
   },

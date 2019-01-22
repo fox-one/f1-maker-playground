@@ -3,10 +3,9 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Login from '@/components/Login';
 import Link from 'umi/link';
-import { Col, Row, Button } from 'antd';
 import styles from './Login.less';
 
-const { Tab, Mobile, Password, Submit, Captcha, ImageCaptcha } = Login;
+const { Mobile, Password, Submit } = Login;
 
 @connect(({ login, loading }) => ({
   login,
@@ -15,9 +14,7 @@ const { Tab, Mobile, Password, Submit, Captcha, ImageCaptcha } = Login;
 class LoginPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      demo: APP_TYPE === 'demo',
-    };
+    this.state = {};
   }
 
   componentWillMount() {
@@ -44,39 +41,7 @@ class LoginPage extends Component {
   };
 
   render() {
-    const { login, submitting } = this.props;
-    const { captchaUrl } = login;
-    const { demo } = this.state;
-    // if (demo) {
-    //   return (
-    //     <div className={styles.main}>
-    //       <Login
-    //         onTabChange={this.onTabChange}
-    //         onSubmit={this.handleSubmit}
-    //         ref={form => {
-    //           this.loginForm = form;
-    //         }}>
-    //         <Mail
-    //           name='email'
-    //           defaultValue='tps+pay@fox.one'
-    //           placeholder={formatMessage({ id: 'app.login.message.passport' })} />
-    //         <Password
-    //           name='password'
-    //           defaultValue='foxonedemo'
-    //           placeholder={formatMessage({ id: 'app.login.message.password' })}
-    //           onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)} />
-    //         <ImageCaptcha
-    //           name='captcha'
-    //           placeholder={formatMessage({ id: 'app.login.message.code' })}
-    //           url={captchaUrl}
-    //           onGetCaptcha={this.onGetImageCaptcha} />
-    //         <Submit loading={submitting}>
-    //           <FormattedMessage id='app.login.login' />
-    //         </Submit>
-    //       </Login>
-    //     </div>
-    //   );
-    // }
+    const { submitting } = this.props;
 
     return (
       <div className={styles.main}>
@@ -96,9 +61,9 @@ class LoginPage extends Component {
             <FormattedMessage id='app.login.login' />
           </Submit>
           <div className={styles.other}>
-            <Link className={styles.captchaLogin} to='/admin/register'>
+            {/* <Link className={styles.captchaLogin} to='/admin/register'>
               验证码登录
-            </Link>
+            </Link> */}
             <Link className={styles.register} to='/admin/register'>
               <FormattedMessage id='app.login.signup' />
             </Link>

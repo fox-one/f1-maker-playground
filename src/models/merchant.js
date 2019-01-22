@@ -1,8 +1,6 @@
-import { queryCurrent, updateMerchant } from '@/services/merchant';
+import { queryCurrent } from '@/services/merchant';
 import { getSession } from '@/utils/authority';
 import router from 'umi/router';
-import { notification } from 'antd';
-import { formatMessage } from 'umi/locale';
 
 export default {
   namespace: 'merchant',
@@ -36,30 +34,9 @@ export default {
         });
       }
     },
-
-  //   *updateMerchantInfo({ payload }, { call, put }) {
-  //     const success = yield call(updateMerchant, payload);
-  //     if (success) {
-  //       notification.success({
-  //         message: formatMessage({ id: `app.settings.notification.update-merchant.success` }),
-  //       });
-  //       const response = yield call(queryCurrent);
-
-  //       yield put({
-  //         type: 'saveCurrentUser',
-  //         merchant: response,
-  //       });
-  //     }
-  //   },
   },
 
   reducers: {
-    // saveCurrentUser(state, action) {
-    //   return {
-    //     ...state,
-    //     currentUser: action.merchant,
-    //   };
-    // },
     completedHandler(state, action) {
       return {
         ...state,

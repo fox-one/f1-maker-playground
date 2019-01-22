@@ -16,22 +16,22 @@ export default {
   state: {
     status: undefined,
     email: '',
-    mobile:'',
-    user: null
+    mobile: '',
+    user: null,
   },
 
   effects: {
     *login({ payload }, { call, put }) {
       const { password: rawPassword, mobile } = payload;
-      
-      if (mobile){
+
+      if (mobile) {
         yield put({
-          type:'updateMobile',
-          payload: mobile
-        })
+          type: 'updateMobile',
+          payload: mobile,
+        });
       }
 
-      const response = yield call(accountLogin, { password:rawPassword, mobile });
+      const response = yield call(accountLogin, { password: rawPassword, mobile });
       if (!response) {
         yield put({
           type: 'changeLoginStatus',
@@ -81,11 +81,11 @@ export default {
     },
 
     *getAccount(_, { call, put }) {
-      const response = yield call(getAccountInfo,null);    
+      const response = yield call(getAccountInfo, null);
       yield put({
-        type:'updateUserInfo',
-        payload:response
-      })
+        type: 'updateUserInfo',
+        payload: response,
+      });
     },
 
     *logout(_, { put }) {
@@ -114,11 +114,12 @@ export default {
   },
 
   reducers: {
-    updateUserInfo(state,{payload}){
+    updateUserInfo(state, payload) {
+      console.log(payload);
       return {
         ...state,
-        user: payload.user
-      }
+        user: payload.user,
+      };
     },
     changeLoginStatus(state, { payload }) {
       if (payload.currentAuthority) {
