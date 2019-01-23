@@ -12,7 +12,6 @@
     "build:local": "cross-env APP_TYPE=local umi build",
     "build:dev": "cross-env APP_TYPE=dev umi build",
     "build:demo": "yarn presite && cross-env APP_TYPE=demo umi build",
-    "build:o1": "yarn presite && cross-env APP_TYPE=o1 umi build",
     "build:f1ex": "yarn presite && cross-env APP_TYPE=f1ex umi build",
     "analyze": "cross-env ANALYZE=1 umi build",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less --fix",

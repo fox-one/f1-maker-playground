@@ -1,26 +1,33 @@
-# FoxONE 商户后台
+# FoxONE Admin 模板工程
 -------
 
-FoxONE 商户后台是基于 Fox.ONE Open支付的数据，给商户提供数据分析和查询的后台管理系统。能够让商户了解在Fox.ONE平台上的交易流水和货币使用分析。
+FoxONE Admin 模板工程是基于 Ant Design Pro 的后台管理系统。
 
 
-商户后台主要功能
+## 技术栈
+```
+yarn
+reactjs
+ant-design
+umi
+dva
+bizchart
+lodash
+```
 
-* 数据概览
-* 交易信息
-* 用户信息
-* 商户资金信息
+## Yarn命令
 
+启动调试server
 
-## 环境
+```yarn start```
 
-线上环境地址
-https://
-线上 API
-https://
+打包项目到dist
 
-Dev环境地址
-https://
-Dev API
-https://
+```yarn build```
 
+其他命令可以参看package.json
+
+## 新增组件流程
+
+1. 在 services 中创建一个 service 管理网络请求
+2. 在 src/pages 中创建一个对应的页面的文件夹及Component

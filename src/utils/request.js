@@ -103,7 +103,6 @@ async function signAndRequest(session, url, options) {
 
 export function handleRequestError(e) {
   const status = e.name;
-  console.log(e);
   if (status === 'TypeError') {
     const error = new Error('服务不可用');
     error.name = '服务不可用，服务器暂时过载或维护。';
