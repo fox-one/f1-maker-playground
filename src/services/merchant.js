@@ -1,9 +1,12 @@
-import request, { handleRequestError } from '@/utils/request';
+import { handleRequestError } from '@/utils/request';
 import { Passport } from 'f1-passport';
 import constants from '../constants';
 import { getSession } from '@/utils/authority';
 
-const passport = new Passport({ host: constants.passportHost, merchantId: '5c8a9491dca25af694004d5e1711b217' });
+const passport = new Passport({
+  host: constants.passportHost,
+  merchantId: constants.merchantId,
+});
 
 export async function getAccountInfo() {
   const session = await getSession();
@@ -22,10 +25,10 @@ export async function accountLogin(params) {
 }
 
 /**
- * @param {regionCode, mobile, captchaId, captchaCode} params
+ * @param { regionCode, mobile, captchaId, captchaCode, email } params
  */
-export async function requestRegisterSMS(params) {
-  return passport.requestRegisterSMS(params).catch(e => {
+export async function requestRegister(params) {
+  return passport.requestRegister(params).catch(e => {
     handleRequestError(e);
   });
 }
@@ -46,7 +49,7 @@ export async function getCaptcha() {
 }
 
 /**
- * @param {name, code, password, token} params
+ * @param { name, code, password, token } params
  */
 export async function register(params) {
   return passport.register(params).catch(e => {

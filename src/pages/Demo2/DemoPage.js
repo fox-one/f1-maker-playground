@@ -4,7 +4,7 @@ import { Card } from 'antd';
 
 class DemoPage extends PureComponent {
   constructor() {
-    super()
+    super();
     this.state = {};
   }
 

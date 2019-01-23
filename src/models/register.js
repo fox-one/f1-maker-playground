@@ -1,4 +1,4 @@
-import { register, getCaptcha, requestRegisterSMS } from '@/services/merchant';
+import { register, getCaptcha, requestRegister } from '@/services/merchant';
 import { reloadAuthorized } from '@/utils/Authorized';
 import { setSession, setAuthority } from '@/utils/authority';
 
@@ -6,6 +6,7 @@ export default {
   namespace: 'register',
 
   state: {
+    name: null,
     status: undefined,
     captchaUrl: '',
     captchaId: '',
@@ -16,29 +17,36 @@ export default {
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const { name, captchaId, mobile, password, captcha } = payload;
+      const { name, token, captcha, password } = payload;
       const response = yield call(register, {
         name,
-        mobile,
+        code: captcha,
         password,
-        captchaId,
-        captcha,
+        token,
       });
 
       if (response != null) {
-        setAuthority('user');
+        setAuthority('admin');
+        reloadAuthorized();
+        setSession(response.session);
         const status = 'ok';
         yield put({
-          type: 'registerHandle',
-          payload: { ...response, status, mobile },
+          type: 'handleRegister',
+          payload: { response, status, name },
+        });
+        yield put({
+          type: 'updateUserInfo',
+          payload: {
+            user: response.user,
+          },
         });
       }
     },
 
-    *requestRegister({ payload }, { call, put }) {
-      const response = yield call(requestRegisterSMS, payload);
+    *requestRegist({ payload }, { call, put }) {
+      const response = yield call(requestRegister, payload);
       yield put({
-        type: 'requestRegisterSMS',
+        type: 'handlerRequestRegister',
         payload: response,
       });
     },
@@ -59,20 +67,19 @@ export default {
   },
 
   reducers: {
-    requestRegisterSMS(state, { payload }) {
-      console.log(payload.token);
+    handlerRequestRegister(state, { payload }) {
       return {
         ...state,
         token: payload.token,
       };
     },
 
-    registerHandle(state, { payload }) {
+    handleRegister(state, { payload }) {
       reloadAuthorized();
       return {
         ...state,
         status: payload.status,
-        email: payload.email,
+        name: payload.name,
       };
     },
 

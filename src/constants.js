@@ -12,6 +12,7 @@ const constants = {
   logo: f1ex,
   primaryColor: '#FD9D00',
   shortName: 'F1EX',
+  merchantId: '5c8a9491dca25af694004d5e1711b217',
 };
 
 if (APP_TYPE === 'f1ex') {

@@ -1,30 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import Link from 'umi/link';
-import Login from '@/components/Login';
 import router from 'umi/router';
-import { Form, Input, Button, Row, Col, Popover, Progress, Icon } from 'antd';
+import { Form, Input, Button, Row, Col, Popover, Progress } from 'antd';
 import styles from './RegisterConfirm.less';
-
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
 const FormItem = Form.Item;
 
 const passwordStatusMap = {
   ok: (
     <div className={styles.success}>
-      <FormattedMessage id="validation.password.strength.strong" />
+      <FormattedMessage id='validation.password.strength.strong' />
     </div>
   ),
   pass: (
     <div className={styles.warning}>
-      <FormattedMessage id="validation.password.strength.medium" />
+      <FormattedMessage id='validation.password.strength.medium' />
     </div>
   ),
   poor: (
     <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.short" />
+      <FormattedMessage id='validation.password.strength.short' />
     </div>
   ),
 };
@@ -48,29 +44,15 @@ class RegisterConfirm extends Component {
     help: '',
   };
 
-  componentWillMount() {
-    this.onGetImageCaptcha();
-  }
-
   componentDidUpdate() {
     const { form, register } = this.props;
-    const account = form.getFieldValue('mobile');
-    // if (register.status === 'ok') {
-    //   router.push({
-    //     pathname: '/merchant/register-result',
-    //     state: {
-    //       account,
-    //     },
-    //   });
-    // }
+    const { status } = register;
+    if (status === 'ok') {
+      router.push({
+        pathname: '/',
+      });
+    }
   }
-
-  onGetImageCaptcha = () => {
-    const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'register/getImageCaptcha',
-    // });
-  };
 
   getPasswordStatus = () => {
     const { form } = this.props;
@@ -87,7 +69,7 @@ class RegisterConfirm extends Component {
   handleSubmit = e => {
     const { form, dispatch } = this.props;
     const { register } = this.props;
-    const { captchaId } = register;
+    const { token } = register;
 
     e.preventDefault();
     form.validateFields({ force: true }, (err, values) => {
@@ -96,7 +78,7 @@ class RegisterConfirm extends Component {
           type: 'register/submit',
           payload: {
             ...values,
-            captchaId,
+            token,
           },
         });
       }
@@ -158,8 +140,7 @@ class RegisterConfirm extends Component {
           className={styles.progress}
           strokeWidth={6}
           percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
+          showInfo={false} />
       </div>
     ) : null;
   };
@@ -169,19 +150,10 @@ class RegisterConfirm extends Component {
     const { getFieldDecorator } = form;
     const { help, visible } = this.state;
 
-    const {
-      register: { captchaUrl },
-    } = this.props;
-
-    let image = <Icon type="reload" />;
-    if (captchaUrl) {
-      image = <img className={styles.getImageCaptcha} src={captchaUrl} alt="Captcha" />;
-    }
-
     return (
       <div className={styles.main}>
         <h3>
-          <FormattedMessage id="app.register.register" />
+          <FormattedMessage id='app.register.register' />
         </h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
@@ -192,7 +164,7 @@ class RegisterConfirm extends Component {
                   message: formatMessage({ id: 'validation.name.required' }),
                 },
               ],
-            })(<Input size="large" placeholder={formatMessage({ id: 'form.name.placeholder' })} />)}
+            })(<Input size='large' placeholder={formatMessage({ id: 'form.name.placeholder' })} />)}
           </FormItem>
           <FormItem help={help}>
             <Popover
@@ -201,14 +173,13 @@ class RegisterConfirm extends Component {
                   {passwordStatusMap[this.getPasswordStatus()]}
                   {this.renderPasswordProgress()}
                   <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="validation.password.strength.msg" />
+                    <FormattedMessage id='validation.password.strength.msg' />
                   </div>
                 </div>
               }
               overlayStyle={{ width: 240 }}
-              placement="right"
-              visible={visible}
-            >
+              placement='right'
+              visible={visible}>
               {getFieldDecorator('password', {
                 rules: [
                   {
@@ -216,11 +187,7 @@ class RegisterConfirm extends Component {
                   },
                 ],
               })(
-                <Input
-                  size="large"
-                  type="password"
-                  placeholder={formatMessage({ id: 'form.password.placeholder' })}
-                />
+                <Input size='large' type='password' placeholder={formatMessage({ id: 'form.password.placeholder' })} />
               )}
             </Popover>
           </FormItem>
@@ -237,10 +204,9 @@ class RegisterConfirm extends Component {
               ],
             })(
               <Input
-                size="large"
-                type="password"
-                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
-              />
+                size='large'
+                type='password'
+                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })} />
             )}
           </FormItem>
           <FormItem>
@@ -253,24 +219,14 @@ class RegisterConfirm extends Component {
                       message: formatMessage({ id: 'validation.verification-code.required' }),
                     },
                   ],
-                })(
-                  <Input
-                    size="large"
-                    placeholder={formatMessage({ id: 'form.verification-code.placeholder' })}
-                  />
-                )}
+                })(<Input size='large' placeholder={formatMessage({ id: 'form.verification-code.placeholder' })} />)}
               </Col>
             </Row>
           </FormItem>
 
           <FormItem>
-            <Button
-              size="large"
-              loading={submitting}
-              className={styles.submit}
-              type="primary"
-              htmlType="submit">
-              <FormattedMessage id="app.register.register" />
+            <Button size='large' loading={submitting} className={styles.submit} type='primary' htmlType='submit'>
+              <FormattedMessage id='app.register.register' />
             </Button>
           </FormItem>
         </Form>

@@ -1,6 +1,6 @@
 export default [
   {
-    // user
+    // user login and register
     path: '/admin',
     component: '../layouts/UserLayout',
     routes: [
@@ -14,15 +14,16 @@ export default [
       },
       {
         path: '/admin/register',
-        component: './Account/Register'
+        component: './Account/Register',
       },
       {
         path: '/admin/registerconfirm',
-        component: './Account/RegisterConfirm'
-      }
+        component: './Account/RegisterConfirm',
+      },
     ],
   },
   {
+    // exception
     name: 'exception',
     component: '../layouts/UserLayout',
     path: '/exception',
@@ -45,6 +46,7 @@ export default [
     ],
   },
   {
+    // after login
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
@@ -52,11 +54,11 @@ export default [
     routes: [
       {
         path: '/',
-        redirect: '/demo',
+        redirect: '/demo/child1',
       },
       {
         path: '/demo',
-        name:'demo',
+        name: 'demo',
         routes: [
           {
             path: '/demo/child1',
@@ -65,30 +67,14 @@ export default [
           },
           {
             path: '/demo/child2',
-            component: './Demo/Child1Page',
+            component: './Demo/Child2Page',
           },
-        ]
+        ],
       },
       {
         path: '/demo2',
-        name:'demo2',
-        routes: [
-          {
-            path: '/demo2/child1',
-            name: 'child1',
-            component: './Demo2/Child2Page',
-          },
-          {
-            path: '/demo2/child2',
-            name: 'child2',
-            component: './Demo2/Child2Page',
-          },
-        ]
-      },
-      {
-        path:'/demo3',
-        name:'demo3',
-        component: './Demo3/DemoPage'
+        name: 'demo2',
+        component: './Demo2/DemoPage',
       },
       {
         component: '404',

@@ -114,7 +114,7 @@ export default {
   },
 
   reducers: {
-    updateUserInfo(state, payload) {
+    updateUserInfo(state, { payload }) {
       console.log(payload);
       return {
         ...state,

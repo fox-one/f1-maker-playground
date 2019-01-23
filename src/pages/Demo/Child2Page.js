@@ -1,11 +1,23 @@
 import React, { PureComponent } from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { Card } from 'antd';
+import { connect } from 'dva';
 
+@connect(({ login, assets }) => ({
+  assets,
+  login,
+}))
 class Child2Page extends PureComponent {
   constructor() {
-    super()
+    super();
     this.state = {};
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/getAccount',
+    });
   }
 
   render() {
