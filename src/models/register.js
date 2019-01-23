@@ -40,6 +40,9 @@ export default {
             user: response.user,
           },
         });
+        yield put({
+          type: 'clearState',
+        });
       }
     },
 
@@ -56,12 +59,6 @@ export default {
       yield put({
         type: 'updateCaptcha',
         payload: captcha,
-      });
-    },
-
-    *resetState(_, { put }) {
-      yield put({
-        type: 'clearState',
       });
     },
   },
@@ -93,7 +90,7 @@ export default {
     clearState(state, _) {
       return {
         ...state,
-        requestSMS: false,
+        token: false,
       };
     },
   },

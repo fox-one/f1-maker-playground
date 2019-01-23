@@ -96,11 +96,9 @@ export default {
   'menu.account.center': 'Merchant Info',
   'menu.account.settings': 'Merchant Setting',
 
-  'menu.demo':'DEMO1 菜单栏',
-  'menu.demo.child1':'DEMO1 子菜单栏',
-  'menu.demo2':'DEMO2 菜单栏',
-  'menu.demo2.child1':'DEMO 2 子菜单栏1',
-  'menu.demo2.child2':'DEMO 2 子菜单栏2',
+  'menu.demo': 'DEMO Menu',
+  'menu.demo.child1': 'Data Intro',
+  'menu.demo2': 'Router & i18N',
 
   'menu.result': 'Result',
   'menu.result.success': 'Success',

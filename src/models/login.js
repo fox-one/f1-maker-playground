@@ -17,7 +17,7 @@ export default {
     status: undefined,
     email: '',
     mobile: '',
-    user: null,
+    user: {},
   },
 
   effects: {
@@ -115,7 +115,6 @@ export default {
 
   reducers: {
     updateUserInfo(state, { payload }) {
-      console.log(payload);
       return {
         ...state,
         user: payload.user,

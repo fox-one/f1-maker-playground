@@ -36,13 +36,6 @@ class Register extends Component {
     }
   }
 
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'register/resetState',
-    });
-  }
-
   onGetImageCaptcha = () => {
     const { dispatch } = this.props;
     dispatch({

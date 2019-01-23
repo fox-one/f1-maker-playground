@@ -131,18 +131,20 @@ export function handleRequestError(e) {
     });
   }
 
-  // e.response.then(response => {
-  //   const locale = getLocale();
-  //   let message = response.error;
-  //   if (!locale || locale === 'zh-CN') {
-  //     message = codeMessageCN[response.status] ? codeMessageCN[response.status] : response.error;
-  //   } else {
-  //     message = codeMessageUS[response.status] ? codeMessageUS[response.status] : response.error;
-  //   }
-  //   notification.error({
-  //     message,
-  //   });
-  // });
+  const locale = getLocale();
+  let { message } = e.response;
+  let errMessage = null;
+  if (!locale || locale === 'zh-CN') {
+    errMessage = codeMessageCN[e.response.code] ? codeMessageCN[e.response.code] : e.response.data.hint;
+  } else {
+    errMessage = codeMessageUS[e.response.code] ? codeMessageUS[e.response.code] : e.response.data.hint;
+  }
+  if (errMessage) {
+    message = errMessage;
+  }
+  notification.error({
+    message,
+  });
 }
 
 /**
