@@ -12,6 +12,9 @@ export function getAuthority(str) {
   } catch (e) {
     authority = authorityString;
   }
+  if (authority === null || authority === undefined) {
+    authority = 'guest';
+  }
   if (typeof authority === 'string') {
     return [authority];
   }
