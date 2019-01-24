@@ -104,7 +104,6 @@ export function handleRequestError(e) {
   let errMessage = formatMessage({ id: `app.request.error-code.${e.response.data.code}` });
 
   if (errMessage.match('app.request.error-code')) {
-    console.log(errMessage);
     errMessage = e.response.data.hint;
   }
 

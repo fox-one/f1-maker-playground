@@ -127,15 +127,25 @@ export default {
   'app.setting.othersettings': '其他设置',
 
   // errorCode message
-  'app.request.error-code.10700': '此手机号码已经注册',
-  'app.request.error-code.10701': '请先登录',
-  'app.request.error-code.10702': '登录失败',
-  'app.request.error-code.10703': '验证码发送失败',
-  'app.request.error-code.10704': '密码长度不符合',
-  'app.request.error-code.10706': '无访问权限',
-  'app.request.error-code.10707': '账号不可用',
-  'app.request.error-code.10708': '登录太频繁,请稍后再试',
-  'app.request.error-code.10712': '账号未激活',
+  'app.request.error-code.10001': '缺少参数',
+  'app.request.error-code.10002': '操作禁止',
+  'app.request.error-code.10003': '数据格式不合法',
+
+  'app.request.error-code.10101': '商户授权信息校验失败',
+  'app.request.error-code.10102': '手机号已注册',
+  'app.request.error-code.10103': '邮箱已注册',
+  'app.request.error-code.10104': '账号无法注册',
+  'app.request.error-code.10105': '没有找到该账户',
+  'app.request.error-code.10106': '用户授权信息校验失败',
+  'app.request.error-code.10107': '未注册或者密码不正确',
+  'app.request.error-code.10108': '密码输入错误',
+  'app.request.error-code.10109': '操作被禁止',
+
+  'app.request.error-code.10201': '验证码错误',
+  'app.request.error-code.10202': '验证 身份令牌 无效',
+  'app.request.error-code.10203': '图形验证码校验失败',
+
+  'app.request.error-code.10301': '授权信息校验失败',
 
   'menu.currency.cny': 'CNY',
   'menu.currency.usd': 'USD',

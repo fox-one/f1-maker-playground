@@ -133,15 +133,25 @@ export default {
   'app.setting.othersettings': 'Other Settings',
 
   // errorCode message
-  'app.request.error-code.10700': 'phone number already registed',
-  'app.request.error-code.10701': 'login required',
-  'app.request.error-code.10702': 'login failed',
-  'app.request.error-code.10703': 'send validation code failed',
-  'app.request.error-code.10704': 'the length of password is invalid',
-  'app.request.error-code.10706': 'permission denied',
-  'app.request.error-code.10707': 'account is not enabled',
-  'app.request.error-code.10708': 'login too frequently',
-  'app.request.error-code.10712': 'account not activated yet',
+  'app.request.error-code.10001': 'lack of parematers	',
+  'app.request.error-code.10002': 'forbidden',
+  'app.request.error-code.10003': 'invalid data',
+
+  'app.request.error-code.10101': 'merchant auth failed',
+  'app.request.error-code.10102': 'phone registed',
+  'app.request.error-code.10103': 'email registed',
+  'app.request.error-code.10104': 'register fobbiden',
+  'app.request.error-code.10105': 'account not registed',
+  'app.request.error-code.10106': 'user auth failed',
+  'app.request.error-code.10107': 'login faield',
+  'app.request.error-code.10108': 'wrong password',
+  'app.request.error-code.10109': 'action blocked',
+
+  'app.request.error-code.10201': 'wrong validation code',
+  'app.request.error-code.10202': 'invalid validate token',
+  'app.request.error-code.10203': 'captcha verify failed',
+
+  'app.request.error-code.10301': 'admin auth failed',
 
   'menu.currency.cny': 'CNY',
   'menu.currency.usd': 'USD',
