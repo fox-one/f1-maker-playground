@@ -1,8 +1,6 @@
-# FoxONE Admin 模板工程
--------
+# FoxONE Maker Admin 模板工程
 
-FoxONE Admin 模板工程是基于 [Ant Design Pro](https://pro.ant.design/docs/getting-started-cn) 的后台管理系统。
-
+FoxONE Maker Admin 模板工程是基于 [Ant Design Pro](https://pro.ant.design/docs/getting-started-cn) 的后台管理系统。
 
 ## 主要技术栈
 
