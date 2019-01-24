@@ -5,7 +5,7 @@ import Login from '@/components/Login';
 import Link from 'umi/link';
 import styles from './Login.less';
 
-const { Mobile, Password, Submit } = Login;
+const { Mobile, Password, Submit, Tab, Mail } = Login;
 
 @connect(({ login, loading }) => ({
   login,
@@ -14,7 +14,9 @@ const { Mobile, Password, Submit } = Login;
 class LoginPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      type: 'mobile',
+    };
   }
 
   componentWillMount() {
@@ -42,28 +44,34 @@ class LoginPage extends Component {
 
   render() {
     const { submitting } = this.props;
-
+    const { type } = this.state;
     return (
       <div className={styles.main}>
         <Login
+          defaultActiveKey={type}
           onTabChange={this.onTabChange}
           onSubmit={this.handleSubmit}
           ref={loginForm => {
             this.loginForm = loginForm;
           }}>
-          <Mobile name='mobile' placeholder={formatMessage({ id: 'app.login.message.passport' })} />
-          <Password
-            name='password'
-            placeholder={formatMessage({ id: 'app.login.message.password' })}
-            onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)} />
-
+          <Tab key='mobile' tab={formatMessage({ id: 'app.login.message.mobile' })}>
+            <Mobile name='mobile' placeholder={formatMessage({ id: 'app.login.message.mobile' })} />
+            <Password
+              name='password'
+              placeholder={formatMessage({ id: 'app.login.message.password' })}
+              onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)} />
+          </Tab>
+          <Tab key='email' tab={formatMessage({ id: 'app.login.message.email' })}>
+            <Mail name='email' placeholder={formatMessage({ id: 'app.login.message.email' })} />
+            <Password
+              name='password'
+              placeholder={formatMessage({ id: 'app.login.message.password' })}
+              onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)} />
+          </Tab>
           <Submit loading={submitting}>
             <FormattedMessage id='app.login.login' />
           </Submit>
           <div className={styles.other}>
-            {/* <Link className={styles.captchaLogin} to='/admin/register'>
-              验证码登录
-            </Link> */}
             <Link className={styles.register} to='/admin/register'>
               <FormattedMessage id='app.login.signup' />
             </Link>

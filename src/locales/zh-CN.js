@@ -74,7 +74,8 @@ export default {
   'menu.demo.child1': '数据获取介绍',
   'menu.demo2': '路由及i18n介绍',
 
-  'app.login.message.passport': '邮箱',
+  'app.login.message.mobile': '手机号',
+  'app.login.message.email': '邮箱',
   'app.login.message.password': '密码',
   'app.login.message.code': '验证码',
   'app.login.message-invalid-credentials': '账户或密码错误',

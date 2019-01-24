@@ -1,14 +1,11 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { accountLogin, changePassword, updateAccount, getAccountInfo } from '@/services/merchant';
+import { accountLogin, getAccountInfo } from '@/services/merchant';
 import { setSession, setAuthority, removeSession, removeMerchantBrokerId } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 // import router from 'umi/router';
 import { removeAdminUUID } from '@/global';
-import md5 from 'blueimp-md5';
-import { notification } from 'antd';
-import { formatMessage } from 'umi/locale';
 
 export default {
   namespace: 'login',
@@ -22,7 +19,7 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const { password: rawPassword, mobile } = payload;
+      const { password: rawPassword, mobile, email } = payload;
 
       if (mobile) {
         yield put({
@@ -30,8 +27,14 @@ export default {
           payload: mobile,
         });
       }
+      if (email) {
+        yield put({
+          type: 'updateEmail',
+          payload: email,
+        });
+      }
 
-      const response = yield call(accountLogin, { password: rawPassword, mobile });
+      const response = yield call(accountLogin, { password: rawPassword, mobile, email });
       if (!response) {
         yield put({
           type: 'changeLoginStatus',
@@ -134,6 +137,12 @@ export default {
       return {
         ...state,
         mobile: payload,
+      };
+    },
+    updateEmail(state, { payload }) {
+      return {
+        ...state,
+        email: payload,
       };
     },
     updateSuccessHandler(state) {

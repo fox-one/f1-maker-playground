@@ -79,7 +79,8 @@ export default {
   'menu.report.transaction': 'Transaction Report',
   'menu.report.coin': 'Coin Report',
 
-  'app.login.message.passport': 'Mail',
+  'app.login.message.mobile': 'Mobile',
+  'app.login.message.email': 'Email',
   'app.login.message.password': 'Password',
   'app.login.message.code': 'Code',
   'app.login.message-invalid-credentials': 'Invalid username or password',
