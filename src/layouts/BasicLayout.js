@@ -100,7 +100,6 @@ class BasicLayout extends React.PureComponent {
   componentWillMount() {}
 
   componentDidMount() {
-    this.getBasicInfo();
     this.renderRef = requestAnimationFrame(() => {});
     this.enquireHandler = enquireScreen(mobile => {
       const { isMobile } = this.state;
@@ -126,16 +125,6 @@ class BasicLayout extends React.PureComponent {
   componentWillUnmount() {
     cancelAnimationFrame(this.renderRef);
     unenquireScreen(this.enquireHandler);
-  }
-
-  getBasicInfo() {
-    const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'pairs/getPairList',
-    // });
-    // dispatch({
-    //   type: 'assets/getAssets',
-    // });
   }
 
   getContext() {
