@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'antd';
-import styles from './index.less';
 import { formatMessage } from 'umi/locale';
+import styles from './index.less';
 
 export default {
   Mail: {

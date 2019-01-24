@@ -1,40 +1,10 @@
 import fetch from 'dva/fetch';
 import { notification } from 'antd';
-// import router from 'umi/router';
 import hash from 'hash.js';
-import { getLocale } from 'umi/locale';
+import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
-import { URL } from 'url';
 import { generateSignRequest, generateToken } from 'f1-passport';
 import { getSession } from './authority';
-
-const codeMessageCN = {
-  10700: '此手机号码已经注册',
-  10701: '请先登录',
-  10702: '登录失败',
-  10703: '验证码发送失败',
-  10704: '密码长度不符合',
-  10705: '无访问权限',
-  10707: '账号不可用',
-  10708: '登录太频繁,请稍后再试',
-  10712: '账号未激活',
-
-  10722: '未找到该订单',
-};
-
-const codeMessageUS = {
-  10700: 'phone number already registed',
-  10701: 'login required',
-  10702: 'login failed',
-  10703: 'send validation code failed',
-  10704: 'the length of password is invalid',
-  10706: 'permission denied',
-  10707: 'account is not enabled',
-  10708: 'login too frequently',
-  10712: 'account not activated yet',
-
-  10722: 'transaction not found',
-};
 
 function getQueryString(params) {
   if (!params) {
@@ -105,7 +75,7 @@ export function handleRequestError(e) {
   const status = e.name;
   if (status === 'TypeError') {
     const error = new Error('服务不可用');
-    error.name = '服务不可用，服务器暂时过载或维护。';
+    error.name = '服务不可用，服务器暂时过载或正在维护。';
     notification.error({
       message: error.message,
       description: error.name,
@@ -130,17 +100,18 @@ export function handleRequestError(e) {
     });
   }
 
-  const locale = getLocale();
   let { message } = e.response;
-  let errMessage = null;
-  if (!locale || locale === 'zh-CN') {
-    errMessage = codeMessageCN[e.response.code] ? codeMessageCN[e.response.code] : e.response.data.hint;
-  } else {
-    errMessage = codeMessageUS[e.response.code] ? codeMessageUS[e.response.code] : e.response.data.hint;
+  let errMessage = formatMessage({ id: `app.request.error-code.${e.response.data.code}` });
+
+  if (errMessage.match('app.request.error-code')) {
+    console.log(errMessage);
+    errMessage = e.response.data.hint;
   }
+
   if (errMessage) {
     message = errMessage;
   }
+
   notification.error({
     message,
   });
