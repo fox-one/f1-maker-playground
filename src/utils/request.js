@@ -55,8 +55,8 @@ async function signAndRequest(session, url, options) {
   host = host.substring(0, host.length - 1);
 
   const pathAndQuery = url.replace(regexSt, '/');
-  const signData = generateSignRequest(options.method.toLowerCase(), pathAndQuery);
-  const token = await generateToken(session.key, session.secret, signData.sign);
+  const signData = generateSignRequest({ method: options.method, url: pathAndQuery, body: options.body });
+  const token = await generateToken({ key: session.key, secret: session.secret, requestSign: signData.sign });
   const finalUrl = `${host}${signData.uri}`;
 
   const headers = {
