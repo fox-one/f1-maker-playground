@@ -5,6 +5,7 @@ import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
 import { generateSignRequest, generateToken } from 'f1-passport';
 import { getSession } from './authority';
+import constants from '../constants';
 
 function getQueryString(params) {
   if (!params) {
@@ -58,17 +59,17 @@ async function signAndRequest(session, url, options) {
   const signData = generateSignRequest({ method: options.method, url: pathAndQuery, body: options.body });
   const token = await generateToken({ key: session.key, secret: session.secret, requestSign: signData.sign });
   const finalUrl = `${host}${signData.uri}`;
-
   const headers = {
     ...options.headers,
     Authorization: `Bearer ${token}`,
   };
   const newOptions = {
     ...options,
-    method: options.method.toLowerCase(),
+    method: options.method,
+    body: JSON.stringify(signData.body),
     headers,
   };
-  return fetch(finalUrl, newOptions);
+  return window.fetch(finalUrl, newOptions);
 }
 
 export function handleRequestError(e) {
@@ -140,6 +141,7 @@ export default async function request(url, option) {
 
   const defaultOptions = {
     credentials: 'include',
+    'merchant-id': constants.merchantId,
   };
 
   const newOptions = { ...defaultOptions, ...options };
@@ -155,7 +157,6 @@ export default async function request(url, option) {
         'Content-Type': 'application/json; charset=utf-8',
         ...newOptions.headers,
       };
-      newOptions.body = JSON.stringify(newOptions.body);
     } else {
       // newOptions.body is FormData
       newOptions.headers = {
@@ -194,6 +195,9 @@ export default async function request(url, option) {
   if (session) {
     fetchRequest = signAndRequest(session, urlCopy, newOptions);
   } else {
+    if (newOptions.body) {
+      newOptions.body = JSON.stringify(newOptions.body);
+    }
     fetchRequest = fetch(urlCopy, newOptions);
   }
 
