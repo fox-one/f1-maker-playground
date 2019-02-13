@@ -63,6 +63,7 @@ class Register extends Component {
         if (tab === 'mobile') {
           payload.mobile = values.mobile;
           payload.regionCode = values.regionCode;
+          payload.captcha = values.captchaCode;
         } else {
           payload.email = values.email;
         }
