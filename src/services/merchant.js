@@ -1,5 +1,5 @@
 import { handleRequestError } from '@/utils/request';
-import { Passport } from 'f1-passport';
+import { Passport } from '@foxone/passport';
 import constants from '../constants';
 import { getSession } from '@/utils/authority';
 

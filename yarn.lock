@@ -963,6 +963,19 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@foxone/passport@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@foxone/passport/-/passport-1.0.0.tgz#2c6faabad2c95b33b9db5c82d2e518fd33fa12e1"
+  integrity sha512-Xl5MBVT8TQ4IGWJOGifA2Dx/i9gHpEQyt/UGpiSXzE+r2H8S47fcdqHnQ7UPFuUTdGGO+YR05yvQTAq3XMExmw==
+  dependencies:
+    "@types/axios" "^0.14.0"
+    "@types/base64url" "^2.0.0"
+    "@types/crypto-js" "^3.1.43"
+    "@types/uuid" "^3.4.4"
+    axios "^0.18.0"
+    crypto-js "^3.1.9-1"
+    node-jose "^1.1.0"
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.npmjs.org/@iamstarkov/listr-update-renderer/-/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"
@@ -5717,19 +5730,6 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
-
-f1-passport@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/f1-passport/-/f1-passport-1.0.0.tgz#b1fa20317d6f9780f5cbf14cca02b4c95c5cc9b9"
-  integrity sha512-sUciSJ3aKssBH6ltbwz7NwEyY8fom8GHeWwUu2atWmw0Ff73Ve0jzfkQ3cpHhS+mQNGGWQY6xxSK0sij9MeCRA==
-  dependencies:
-    "@types/axios" "^0.14.0"
-    "@types/base64url" "^2.0.0"
-    "@types/crypto-js" "^3.1.43"
-    "@types/uuid" "^3.4.4"
-    axios "^0.18.0"
-    crypto-js "^3.1.9-1"
-    node-jose "^1.1.0"
 
 fast-deep-equal@^2.0.1:
   version "2.0.1"

@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import hash from 'hash.js';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
-import { generateSignRequest, generateToken } from 'f1-passport';
+import { generateSignRequest, generateToken } from '@foxone/passport';
 import { getSession } from './authority';
 import constants from '../constants';
 

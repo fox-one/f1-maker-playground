@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
+    "@foxone/passport": "^1.0.0",
     "antd": "^3.11.6",
     "bizcharts": "^3.4.2",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
@@ -33,7 +34,6 @@
     "classnames": "^2.2.6",
     "dva": "^2.4.1",
     "enquire-js": "^0.2.1",
-    "f1-passport": "^1.0.0",
     "fs-promise": "^2.0.3",
     "hash.js": "^1.1.5",
     "localforage": "^1.7.3",
