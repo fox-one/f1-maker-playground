@@ -49,7 +49,7 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
-const regexSt = new RegExp('^https://[a-zA-Z0-9.-]*/');
+const regexSt = new RegExp('^(https|http)://[a-zA-Z0-9:.-]*/');
 
 async function signAndRequest(session, url, options) {
   let host = url.match(regexSt)[0];
